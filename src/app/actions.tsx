@@ -4,10 +4,12 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { currentUser } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
+import { Knock } from '@knocklabs/node';
 
 import { Invoices } from '@/db/schema';
 import { db } from '@/db';
 
+const knock = new Knock(process.env.KNOCK_API_SECRET);
 
 /**
  * createInvoice
@@ -36,6 +38,22 @@ export async function createInvoice(formData: FormData) {
     });
 
   const invoicePath = `/invoices/${results[0].id}`;
+
+  await knock.workflows.trigger('invoice-created', {
+    data: {
+      name,
+      email,
+      description,
+      value,
+    },
+    recipients: [
+      {
+        id: user.id,
+        name: user?.firstName || '',
+        email: user?.emailAddresses.find(email => email.id === user.primaryEmailAddressId)?.emailAddress,
+      }
+    ],
+  });
 
   redirect(invoicePath);
 }
