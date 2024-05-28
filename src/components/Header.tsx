@@ -3,6 +3,7 @@ import { UserButton } from '@clerk/nextjs';
 import { currentUser } from '@clerk/nextjs/server';
 
 import Container from '@/components/Container';
+import NotificationFeed from './NotificationFeed';
 
 const AuthHeader = async () => {
   const user = await currentUser();
@@ -15,6 +16,7 @@ const AuthHeader = async () => {
           </Link>
         </p>
         <div className="h-8 flex items-center gap-4">
+          <NotificationFeed />
           {user && <UserButton />}
         </div>
       </Container>

@@ -45,6 +45,7 @@ export async function createInvoice(formData: FormData) {
       email,
       description,
       value,
+      url: invoicePath,
     },
     recipients: [
       {
