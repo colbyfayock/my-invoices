@@ -17,7 +17,7 @@ const knock = new Knock(process.env.KNOCK_API_SECRET);
 
 export async function createInvoice(formData: FormData) {
   const user = await currentUser()
-  
+
   if (!user) throw new Error('User not found');
 
   const name = formData.get('name') as string;
@@ -65,13 +65,13 @@ export async function createInvoice(formData: FormData) {
 
 export async function updateStatus(formData: FormData) {
   const user = await currentUser()
-  
+
   if (!user) throw new Error('User not found');
 
   const id = formData.get('id') as string;
   const status = formData.get('status') as string;
 
-  await db.update(Invoices)
+  const results = await db.update(Invoices)
     .set({ status })
     .where(eq(Invoices.id, parseInt(id)))
     .returning({
@@ -81,6 +81,27 @@ export async function updateStatus(formData: FormData) {
       value: Invoices.value,
       status: Invoices.status,
     });
+
+  const invoicePath = `/invoices/${results[0].id}`;
+
+  await knock.workflows.trigger('invoice-updated', {
+    data: {
+      ...results[0],
+      url: invoicePath,
+    },
+    recipients: [
+      {
+        id: user.id,
+        name: user?.firstName || '',
+        email: user?.emailAddresses.find(email => email.id === user.primaryEmailAddressId)?.emailAddress,
+      },
+      {
+        id: `payee_${results[0].id}`,
+        name: results[0].name,
+        email: results[0].email,
+      }
+    ],
+  });
 
   revalidatePath(`/invoices/[invoiceId]`, 'page');
 }
