@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@brianmmdev/clerk-webhooks-handler": "^1.0.5",
     "@clerk/nextjs": "^5.0.8",
     "@knocklabs/node": "^0.6.11",
     "@knocklabs/react": "^0.2.22",
