@@ -1,12 +1,10 @@
 # In-App & Email Notifications in Next.js with Knock
 
-Demo for tutorial
+Demo for tutorial [Build a Notification System in Next.js with Knock](https://www.youtube.com/watch?v=nS5flwLW7Fs)
 
-📝 Article: 
+📝 Article: https://spacejelly.dev/posts/how-to-build-a-notification-system-in-next-js-with-knock
 
-📺 YouTube: 
-
-🚀 Demo: 
+📺 YouTube: https://www.youtube.com/watch?v=nS5flwLW7Fs
 
 ## More tutorials and walkthroughs
 
